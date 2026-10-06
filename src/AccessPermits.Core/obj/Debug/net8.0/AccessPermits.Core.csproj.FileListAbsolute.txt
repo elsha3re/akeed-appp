@@ -1,0 +1,11 @@
+C:\Users\aanwar\Downloads\New folder (8)\src\AccessPermits.Core\bin\Debug\net8.0\AccessPermits.Core.deps.json
+C:\Users\aanwar\Downloads\New folder (8)\src\AccessPermits.Core\bin\Debug\net8.0\AccessPermits.Core.dll
+C:\Users\aanwar\Downloads\New folder (8)\src\AccessPermits.Core\bin\Debug\net8.0\AccessPermits.Core.pdb
+C:\Users\aanwar\Downloads\New folder (8)\src\AccessPermits.Core\obj\Debug\net8.0\AccessPermits.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\aanwar\Downloads\New folder (8)\src\AccessPermits.Core\obj\Debug\net8.0\AccessPermits.Core.AssemblyInfoInputs.cache
+C:\Users\aanwar\Downloads\New folder (8)\src\AccessPermits.Core\obj\Debug\net8.0\AccessPermits.Core.AssemblyInfo.cs
+C:\Users\aanwar\Downloads\New folder (8)\src\AccessPermits.Core\obj\Debug\net8.0\AccessPermits.Core.csproj.CoreCompileInputs.cache
+C:\Users\aanwar\Downloads\New folder (8)\src\AccessPermits.Core\obj\Debug\net8.0\AccessPermits.Core.dll
+C:\Users\aanwar\Downloads\New folder (8)\src\AccessPermits.Core\obj\Debug\net8.0\refint\AccessPermits.Core.dll
+C:\Users\aanwar\Downloads\New folder (8)\src\AccessPermits.Core\obj\Debug\net8.0\AccessPermits.Core.pdb
+C:\Users\aanwar\Downloads\New folder (8)\src\AccessPermits.Core\obj\Debug\net8.0\ref\AccessPermits.Core.dll

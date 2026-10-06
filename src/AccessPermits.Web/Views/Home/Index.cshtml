@@ -1,0 +1,756 @@
+@{
+    ViewData["Title"] = "نظام تصاريح الدخول";
+}
+
+<!-- ═══════ شاشة الدخول الحديثة ═══════ -->
+<div class="login-wrap" id="screenLogin">
+  <div class="login-card">
+    <aside class="login-art">
+      <div class="login-art-glow"></div>
+      <div class="login-art-top"><span class="login-art-chip">🛡️ منصة الوصول الآمن</span></div>
+      <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" class="login-svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="lgSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e7a4f" stop-opacity=".55"/><stop offset="1" stop-color="#0d2518" stop-opacity="0"/></linearGradient>
+          <linearGradient id="lgGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e6b73e"/><stop offset="1" stop-color="#a07820"/></linearGradient>
+          <linearGradient id="lgBld" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2f8f60"/><stop offset="1" stop-color="#15573a"/></linearGradient>
+        </defs>
+        <circle cx="200" cy="140" r="120" fill="url(#lgSky)"/>
+        <circle cx="200" cy="140" r="96" fill="none" stroke="#c9941e" stroke-opacity=".25" stroke-dasharray="3 6"/>
+        <rect x="40" y="168" width="64" height="92" rx="4" fill="url(#lgBld)" opacity=".75"/>
+        <rect x="296" y="150" width="70" height="110" rx="4" fill="url(#lgBld)" opacity=".75"/>
+        <g fill="#d6f0e2" opacity=".55"><rect x="52" y="182" width="12" height="12" rx="2"/><rect x="76" y="182" width="12" height="12" rx="2"/><rect x="52" y="206" width="12" height="12" rx="2"/><rect x="76" y="206" width="12" height="12" rx="2"/><rect x="308" y="166" width="12" height="12" rx="2"/><rect x="334" y="166" width="12" height="12" rx="2"/><rect x="308" y="192" width="12" height="12" rx="2"/><rect x="334" y="192" width="12" height="12" rx="2"/><rect x="308" y="218" width="12" height="12" rx="2"/><rect x="334" y="218" width="12" height="12" rx="2"/></g>
+        <rect x="128" y="150" width="14" height="110" rx="3" fill="#0d2518" stroke="#c9941e" stroke-width="2"/>
+        <rect x="258" y="150" width="14" height="110" rx="3" fill="#0d2518" stroke="#c9941e" stroke-width="2"/>
+        <rect x="120" y="140" width="160" height="16" rx="8" fill="url(#lgGold)"/>
+        <path d="M200 52 L252 72 V118 C252 148 230 170 200 182 C170 170 148 148 148 118 V72 Z" fill="#0f2d1f" stroke="url(#lgGold)" stroke-width="4"/>
+        <path d="M176 116 L194 134 L228 96" fill="none" stroke="#e6b73e" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="20" y="258" width="360" height="6" rx="3" fill="#0a1f14" opacity=".6"/>
+        <g><rect x="190" y="232" width="20" height="28" rx="3" fill="#c9941e" opacity=".9"/><circle cx="200" cy="224" r="6" fill="#c9941e" opacity=".9"/></g>
+      </svg>
+      <div class="login-art-title">تحكم كامل في الدخول والخروج</div>
+      <div class="login-art-sub">من طلب التصريح حتى الاستعلام على البوابة — في نظام واحد مع قاعدة بيانات SQL Server.</div>
+      <ul class="login-feats">
+        <li><span>📝</span> طلبات تصاريح للأفراد والمركبات والخروج</li>
+        <li><span>✅</span> مسار اعتماد واضح وصلاحيات حسب الدور</li>
+        <li><span>🚪</span> بوابات بأكثر من جهاز واستعلام فوري بالـ MAC</li>
+        <li><span>📜</span> سجل تدقيق كامل لكل حركة في النظام</li>
+      </ul>
+    </aside>
+    <div class="login-main">
+      <div class="login-security-badge">اتصال آمن وموثق</div>
+      <div class="login-header">
+        <div class="login-logo no-logo" id="loginLogo"></div>
+        <div class="login-title" id="loginTitle">نظام تصاريح الدخول</div>
+        <div class="login-title-sub">بوابة الوصول الآمن للمجمع — .NET 8 MVC & SQL Server</div>
+      </div>
+      <div class="login-body">
+        <div class="login-error" id="loginError">⚠️ بيانات الدخول غير صحيحة</div>
+        <div class="login-input-group">
+          <label>👤 اسم المستخدم</label>
+          <div class="login-input-wrap">
+            <input type="text" id="loginUsername" placeholder="أدخل اسم المستخدم" autocomplete="username">
+            <span class="login-input-icon">👤</span>
+          </div>
+        </div>
+        <div class="login-input-group">
+          <label>🔐 كلمة المرور</label>
+          <div class="login-input-wrap">
+            <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" onkeydown="if(event.key==='Enter')doLogin()" autocomplete="current-password">
+            <span class="login-input-icon">🔒</span>
+            <button type="button" class="login-password-toggle" onclick="togglePasswordVisibility()">👁️</button>
+          </div>
+        </div>
+        <button class="login-btn" onclick="doLogin()">🔓 تسجيل الدخول</button>
+        <div class="login-divider">أو الدخول السريع للتجربة</div>
+        <div class="login-quick">
+          <button onclick="fillDemo('admin')">👑 مدير</button>
+          <button onclick="fillDemo('approver')">✅ معتمد</button>
+          <button onclick="fillDemo('requester')">📝 مقدم</button>
+          <button onclick="fillDemo('guard')">🛡️ حارس</button>
+        </div>
+      </div>
+      <div class="login-footer">© 2026 <b>نظام تصاريح الدخول</b> — هندسة متعددة الطبقات (Layered Architecture)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ الشريط العلوي ═══════ -->
+<div class="topbar" id="mainTopbar" style="display:none">
+  <button class="btn bg2 bxs menu-btn" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+  <div class="topbar-logo">
+    <div class="topbar-logo-ico" id="topbarLogoIco">🛡️</div>
+    <span id="topbarSystemName">تصاريح الدخول</span>
+  </div>
+  <div class="topbar-nav" id="topbarNav">
+    <button class="tnav active" data-screen="dashboard" onclick="goto('dashboard',this)">🏠 الرئيسية</button>
+    <button class="tnav" data-screen="new-request" onclick="newReq();goto('new-request',this)">➕ طلب</button>
+    <button class="tnav" data-screen="gate" onclick="goto('gate',this)">🛡️ استعلام</button>
+    <button class="tnav" data-screen="my-requests" onclick="goto('my-requests',this)">📋 طلباتي</button>
+    <button class="tnav" data-screen="approvals" onclick="goto('approvals',this)">📨 اعتماد <span class="badge bor2" id="tnavApprovalCount">0</span></button>
+  </div>
+  <div class="topbar-right">
+    <div class="role-picker" id="branchPickerWrap">
+      <span style="font-size:11px;color:rgba(255,255,255,.6)">🏢</span>
+      <select id="branchSwitcher" onchange="setBranch(this.value)"></select>
+    </div>
+    <div class="user-badge">
+      <div class="user-avatar" id="topUserAvatar">—</div>
+      <div>
+        <div class="user-name" id="topUserName">—</div>
+        <div class="user-dept" id="topUserRoleLabel">—</div>
+      </div>
+    </div>
+    <button class="topbar-action-btn gold" onclick="exportProjectZIP()" title="تصدير نسخة احتياطية من المشروع">
+      📦 <span>تصدير</span>
+    </button>
+    <button class="topbar-action-btn danger" onclick="doLogout()" title="تسجيل الخروج">
+      🚪 <span>خروج</span>
+    </button>
+  </div>
+</div>
+
+<div class="app-body" id="mainAppBody" style="display:none">
+<div class="sidebar">
+  <div class="sb-item active" data-screen="dashboard" onclick="goto('dashboard',null);setSb(this)"><span class="sb-ico">🏠</span>لوحة التحكم</div>
+  <div class="sb-group"><div class="sb-group-header" onclick="this.parentElement.classList.toggle('collapsed')"><span>👥 الأشخاص والتصاريح</span><span>▾</span></div><div class="sb-group-body">
+    <div class="sb-item" data-screen="new-request" onclick="newReq();goto('new-request',null);setSb(this)"><span class="sb-ico">➕</span>طلب تصريح</div>
+    <div class="sb-item" data-screen="vehicle" onclick="goto('vehicle',null);setSb(this)"><span class="sb-ico">🚗</span>تصريح مركبة</div>
+    <div class="sb-item" data-screen="exit-permit" onclick="openExit();setSb(this)"><span class="sb-ico">🚪</span>تصريح خروج</div>
+    <div class="sb-item" data-screen="my-requests" onclick="goto('my-requests',null);setSb(this)"><span class="sb-ico">📋</span>طلباتي</div>
+    <div class="sb-item" data-screen="registry" onclick="goto('registry',null);setSb(this)"><span class="sb-ico">🧑</span>سجل الأشخاص</div>
+    <div class="sb-item" data-screen="permitslog" onclick="goto('permitslog',null);setSb(this)"><span class="sb-ico">📋</span>سجل التصاريح</div>
+    <div class="sb-item" data-screen="approvals" onclick="goto('approvals',null);setSb(this)"><span class="sb-ico">📨</span>طلبات التصريح<span class="sb-badge" id="sbApprCount">0</span></div>
+  </div></div>
+  <div class="sb-group"><div class="sb-group-header" onclick="this.parentElement.classList.toggle('collapsed')"><span>🛡️ نقاط الدخول</span><span>▾</span></div><div class="sb-group-body">
+    <div class="sb-item" data-screen="gate" onclick="goto('gate',null);setSb(this)"><span class="sb-ico">🛡️</span>شاشة الاستعلام</div>
+    <div class="sb-item" data-screen="querylog" onclick="goto('querylog',null);setSb(this)"><span class="sb-ico">🧾</span>سجل الاستعلامات</div>
+    <div class="sb-item" data-screen="cardprint" onclick="goto('cardprint',null);setSb(this)"><span class="sb-ico">🖨️</span>طباعة البطاقات</div>
+    <div class="sb-item" data-screen="blacklist" onclick="goto('blacklist',null);setSb(this)"><span class="sb-ico">⛔</span>القائمة السوداء</div>
+  </div></div>
+  <div class="sb-group collapsed"><div class="sb-group-header" onclick="this.parentElement.classList.toggle('collapsed')"><span>⚙️ الإعدادات</span><span>▾</span></div><div class="sb-group-body">
+    <div class="sb-item" data-screen="branches" onclick="goto('branches',null);setSb(this)"><span class="sb-ico">🏢</span>الفروع</div>
+    <div class="sb-item" data-screen="buildings" onclick="goto('buildings',null);setSb(this)"><span class="sb-ico">🏬</span>المباني</div>
+    <div class="sb-item" data-screen="paths" onclick="goto('paths',null);setSb(this)"><span class="sb-ico">🛣️</span>البوابات والمسارات</div>
+    <div class="sb-item" data-screen="departments" onclick="goto('departments',null);setSb(this)"><span class="sb-ico">🏛️</span>الإدارات</div>
+    <div class="sb-item" data-screen="lookups" onclick="goto('lookups',null);setSb(this)"><span class="sb-ico">📚</span>قوائم الاختيار</div>
+    <div class="sb-item" data-screen="users" onclick="goto('users',null);setSb(this)"><span class="sb-ico">👤</span>المستخدمون</div>
+    <div class="sb-item" data-screen="cardtemplate" onclick="goto('cardtemplate',null);setSb(this)"><span class="sb-ico">🪪</span>تصميم البطاقة</div>
+    <div class="sb-item" data-screen="systemsettings" onclick="goto('systemsettings',null);setSb(this)"><span class="sb-ico">🛠️</span>الإعدادات</div>
+  </div></div>
+  <div class="sb-group collapsed"><div class="sb-group-header" onclick="this.parentElement.classList.toggle('collapsed')"><span>📊 التقارير</span><span>▾</span></div><div class="sb-group-body">
+    <div class="sb-item" data-screen="reports" onclick="goto('reports',null);setSb(this)"><span class="sb-ico">📊</span>التقارير الشاملة</div>
+    <div class="sb-item" data-screen="auditlog" onclick="goto('auditlog',null);setSb(this)"><span class="sb-ico">📜</span>سجل النظام</div>
+  </div></div>
+</div>
+
+<div class="content">
+
+<!-- لوحة التحكم -->
+<div class="screen active" id="screen-dashboard">
+  <div class="ph"><div><div class="pt" id="dashGreeting">👋 مرحباً</div><div class="ps" id="dashSub">نظرة عامة</div></div><button class="btn bg2" onclick="rd()">🔄 تحديث</button></div>
+  <div id="dashKpis" class="grid4" style="margin-bottom:20px"></div>
+  <div class="grid2" style="margin-bottom:20px">
+    <div class="report-card"><div class="report-card-title">📊 حالة التصاريح</div><div id="dashStatusChart" class="bar-chart"></div></div>
+    <div class="report-card"><div class="report-card-title">🏢 حسب الفرع</div><div id="dashBranchChart" class="bar-chart"></div></div>
+  </div>
+  <div class="grid2" style="margin-bottom:20px">
+    <div class="report-card"><div class="report-card-title">🏬 حسب المبنى</div><div id="dashBuildingChart" class="bar-chart"></div></div>
+    <div class="report-card"><div class="report-card-title">🏛️ حسب الإدارة</div><div id="dashDeptChart" class="bar-chart"></div></div>
+  </div>
+  <div class="grid5" style="margin-bottom:20px">
+    <div class="stat-box"><div class="stat-ico">🏢</div><div class="stat-val" id="dashBranchesCount">0</div><div class="stat-lbl">الفروع</div></div>
+    <div class="stat-box"><div class="stat-ico">🏬</div><div class="stat-val" id="dashBuildingsCount">0</div><div class="stat-lbl">المباني</div></div>
+    <div class="stat-box"><div class="stat-ico">🚪</div><div class="stat-val" id="dashGatesCount">0</div><div class="stat-lbl">البوابات</div></div>
+    <div class="stat-box"><div class="stat-ico">🛣️</div><div class="stat-val" id="dashPathsCount">0</div><div class="stat-lbl">المسارات</div></div>
+    <div class="stat-box"><div class="stat-ico">🏛️</div><div class="stat-val" id="dashDepsCount">0</div><div class="stat-lbl">الإدارات</div></div>
+  </div>
+  <div class="tbl-wrap">
+    <div class="tbl-head"><span class="tbl-title">📨 طلبات بانتظار الاعتماد (<span id="dashPendingCount">0</span>)</span><button class="btn bg2 bxs" onclick="goto('approvals',null)">عرض الكل</button></div>
+    <table><thead><tr><th>الطلب</th><th>النوع</th><th>الفرع/المبنى</th></tr></thead><tbody id="dashPendingTable"></tbody></table>
+    <div id="dashPendingEmpty" class="hint" style="display:none;padding:24px;text-align:center">لا توجد طلبات ✔</div>
+  </div>
+</div>
+
+<!-- طلب جديد -->
+<div class="screen" id="screen-new-request">
+  <div class="ph"><div><div class="pt" id="newReqTitle">➕ طلب تصريح جديد</div></div></div>
+  <div class="card" style="padding:24px">
+    <div class="wiz-bar">
+      <div class="wiz-step active" data-step="1"><div class="wiz-circle">1</div><div class="wiz-label">الأشخاص</div></div>
+      <div class="wiz-step" data-step="2"><div class="wiz-circle">2</div><div class="wiz-label">الزيارة</div></div>
+      <div class="wiz-step" data-step="3"><div class="wiz-circle">3</div><div class="wiz-label">المسموح</div></div>
+      <div class="wiz-step" data-step="4"><div class="wiz-circle">4</div><div class="wiz-label">الإرسال</div></div>
+    </div>
+    <div class="wiz-body">
+      <div id="wizPage1">
+        <div id="requesterDeptBanner" class="alert-banner info" style="display:none"><div class="alert-ico">🏛️</div><div><div class="alert-text-title">سيتم تسجيل الطلب تحت إدارتك</div><div class="alert-text-sub" id="requesterDeptName">—</div></div></div>
+        <div id="manualDeptBlock"><div class="sdv">🏢 الجهة الطالبة</div><div class="fg2" style="margin-bottom:18px"><div class="fg"><label>الجهة <span class="req">*</span></label><select id="requestingDept" onchange="onReqDept()"></select><input type="text" id="requestingDeptOther" placeholder="اكتب اسم الجهة" style="display:none;margin-top:8px"></div></div></div>
+        <div class="sdv">👤 نوع الطلب</div>
+        <div class="action-options" style="margin-bottom:18px">
+          <div class="action-card selected" id="modeCard-single" onclick="setMode('single')"><div class="action-radio"></div><div class="action-ico">🧑</div><div class="action-body"><div class="action-title">فردي</div><div class="action-sub">تصريح واحد لشخص واحد</div></div></div>
+          <div class="action-card" id="modeCard-multi" onclick="setMode('multi')"><div class="action-radio"></div><div class="action-ico">👥</div><div class="action-body"><div class="action-title">متعدد</div><div class="action-sub">كل شخص يحصل على تصريح مستقل</div></div></div>
+        </div>
+        <div class="sdv">🔍 اختيار الأشخاص <button type="button" class="btn bgold bxs" style="margin-right:auto" onclick="openAddPerson('',true)">➕ شخص جديد</button></div>
+        <div class="fg"><input type="text" id="personSearchInput" placeholder="🔍 ابحث بالاسم أو رقم الهوية..." oninput="searchPersons(this.value)"><div class="search-results" id="personSearchResults" style="display:none"></div></div>
+        <div class="chips-wrap" id="selectedPersonsChips"></div>
+        <div class="hint" id="noPersonsHint">لم يتم اختيار أي شخص بعد</div>
+      </div>
+      <div id="wizPage2" style="display:none">
+        <div class="sdv">📅 معلومات الزيارة</div>
+        <div class="fg3" style="margin-bottom:12px">
+          <div class="fg"><label>موعد الحضور</label><input type="date" id="visitDate"></div>
+          <div class="fg"><label>تاريخ الانتهاء</label><input type="date" id="visitExpiry"></div>
+          <div class="fg"><label>نوع الزيارة</label><select id="visitType"></select></div>
+        </div>
+        <div class="fg2" style="margin-bottom:16px">
+          <div class="fg"><label>🏢 الفرع</label><select id="visitBranch" onchange="renderBuildingSelect();fillReqDept()"></select></div>
+          <div class="fg"><label>🏬 المبنى</label><select id="visitBuilding" onchange="rpc2()"></select></div>
+        </div>
+        <div class="sdv">🛣️ المسار الافتراضي</div>
+        <select id="pathChecklist" onchange="applyDefaultToAll()"></select>
+        <div id="multiPeopleBlock" style="display:none;margin-top:18px">
+          <div class="sdv">👥 جدول الأشخاص والتخصيص</div>
+          <p class="hint" style="margin-bottom:10px">💡 المسار الافتراضي أعلاه يُطبق على الكل. اضغط <b>تخصيص</b> لتعديل مسار شخص معين.</p>
+          <div class="people-table"><table><thead><tr><th style="width:35px">#</th><th>الشخص</th><th style="width:180px">🛣️ المسار</th><th style="width:150px">📅 الوقت</th><th style="width:110px">📱 المسموح</th><th style="width:200px">إجراءات</th></tr></thead><tbody id="multiPeopleTbody"></tbody></table></div>
+        </div>
+        <div id="singlePersonBlock" style="display:none;margin-top:18px">
+          <div class="sdv">🧑 الشخص المختار</div>
+          <div class="people-table"><table><thead><tr><th>#</th><th>الشخص</th><th>🛣️ المسار</th><th>📅 الوقت</th><th>📱 المسموح</th></tr></thead><tbody id="singlePersonTbody"></tbody></table></div>
+        </div>
+      </div>
+      <div id="wizPage3" style="display:none">
+        <div class="sdv">📱 المسموح بدخوله</div>
+        <div class="check-grid" id="wizDeviceChecklist" style="margin-bottom:10px"></div>
+        <button type="button" class="btn bg2 bsm" style="margin-bottom:20px" onclick="addDevice()">➕ إضافة غرض جديد</button>
+        <div class="sdv">📎 المرفقات</div>
+        <div class="upload-zone" onclick="document.getElementById('wizAttachInput').click()"><div class="upload-ico">📷</div><div class="upload-text">اضغط للرفع</div></div>
+        <input type="file" id="wizAttachInput" multiple style="display:none" onchange="handleAttach(this.files)">
+        <div id="wizAttachmentsList" style="margin-top:12px"></div>
+        <div class="sdv">📝 الملاحظات</div>
+        <div class="fg2">
+          <div class="fg"><label>📝 ملاحظات مقدم الطلب</label><textarea rows="3" id="wizRequesterNotes"></textarea></div>
+          <div class="fg"><label>🛡️ ملاحظات لموظف الاستعلام</label><textarea rows="3" id="wizGuardNotes"></textarea></div>
+        </div>
+      </div>
+      <div id="wizPage4" style="display:none"></div>
+    </div>
+    <div class="bgrp" style="border-top:1px solid var(--g100);padding-top:16px">
+      <button class="btn bg2" id="wizBackBtn" onclick="wizBack()" style="display:none">→ السابق</button>
+      <button class="btn bp" id="wizNextBtn" onclick="wizNext()">التالي ←</button>
+      <button class="btn bp" id="wizSendBtn" onclick="submitPermit()" style="display:none">📨 إرسال</button>
+    </div>
+  </div>
+</div>
+
+<!-- تصريح مركبة -->
+<div class="screen" id="screen-vehicle">
+  <div class="ph"><div><div class="pt">🚗 تصريح مركبة</div></div></div>
+  <div class="grid2">
+    <div class="card" style="padding:22px">
+      <div class="sdv">🧑 السائق</div>
+      <div class="fg" style="margin-bottom:16px"><select id="vehicleDriverSelect"></select></div>
+      <div class="sdv">🚙 بيانات المركبة</div>
+      <div class="fg3" style="margin-bottom:12px">
+        <div class="fg"><label>التصنيف</label><select id="vehicleTypeSelect"></select></div>
+        <div class="fg"><label>الشركة</label><select id="vehicleMakeSelect" onchange="onMakeChange()"></select></div>
+        <div class="fg"><label>الموديل</label><select id="vehicleModelSelect" onchange="rvp()"></select></div>
+      </div>
+      <div class="fg3" style="margin-bottom:12px">
+        <div class="fg"><label>السنة</label><select id="vehicleYearSelect"></select></div>
+        <div class="fg"><label>اللون</label><select id="vehicleColorInput" onchange="rvp()"></select></div>
+        <div class="fg"><label>🏢 الفرع</label><select id="vehicleBranch" onchange="renderVehicleBuilding()"></select></div>
+      </div>
+      <div class="fg3" style="margin-bottom:12px">
+        <div class="fg"><label>🏬 المبنى</label><select id="vehicleBuilding" onchange="renderVehiclePath()"></select></div>
+        <div class="fg"><label>🛣️ المسار</label><select id="vehiclePathSelect"></select></div>
+        <div class="fg"><label>الأرقام</label><input type="text" id="vehiclePlateNums" oninput="rvp()"></div>
+      </div>
+      <div class="fg" style="margin-bottom:16px"><label>الحروف</label><input type="text" id="vehiclePlateLetters" oninput="rvp()"></div>
+      <div class="fg2" style="margin-bottom:16px"><div class="fg"><label>📅 من</label><input type="date" id="vehicleFrom"></div><div class="fg"><label>📅 إلى</label><input type="date" id="vehicleTo"></div></div>
+      <button class="btn bp" onclick="submitVehicle()">📨 إرسال للمعتمد</button>
+    </div>
+    <div class="card" style="padding:22px">
+      <div class="sdv">🪪 معاينة البطاقة</div>
+      <div id="vehicleCardPreviewBox"></div>
+      <div class="sdv" style="margin-top:22px">➕ إضافة ماركة/موديل</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn bg2 bsm" onclick="addMake()">➕ ماركة</button>
+        <button class="btn bg2 bsm" onclick="addModel()">➕ موديل</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- تصريح خروج -->
+<div class="screen" id="screen-exit-permit">
+  <div class="ph"><div><div class="pt">🚪 تصريح خروج</div><div class="ps">يجب وجود تصريح دخول ساري نفس اليوم</div></div></div>
+  <div class="card" style="padding:22px;margin-bottom:18px">
+    <div class="sdv">🧑 الشخص</div>
+    <div class="fg" style="max-width:440px;position:relative"><input type="text" id="exitPersonSearch" placeholder="ابحث بالاسم أو الهوية..." oninput="searchPersonForExit(this.value)"><div class="search-results" id="exitPersonResults" style="display:none"></div></div>
+    <div id="exitPersonCheck" style="margin-top:12px"></div>
+  </div>
+  <div class="card" style="padding:22px;margin-bottom:18px">
+    <div class="sdv">📅 التفاصيل</div>
+    <div class="fg3"><div class="fg"><input type="date" id="exitDate" onchange="revalidateExit()"></div><div class="fg"><select id="exitBranch" onchange="renderExitBuilding()"></select></div><div class="fg"><select id="exitBuilding"></select></div></div>
+  </div>
+  <div class="card" style="padding:22px;margin-bottom:18px">
+    <div class="sdv">📦 الأصول</div>
+    <div class="tbl-wrap"><table><thead><tr><th>التصنيف</th><th>النوع</th><th>العدد</th><th>الرقم التسلسلي</th><th></th></tr></thead><tbody id="exitItemsTbody"></tbody></table></div>
+    <button class="btn bg2 bxs" style="margin-top:10px" onclick="addExitItem()">➕ إضافة أصل</button>
+  </div>
+  <div class="card" style="padding:22px;margin-bottom:18px">
+    <div class="sdv">📷 صور الأصول</div>
+    <div class="upload-zone" onclick="document.getElementById('exitImagesInput').click()"><div class="upload-ico">📷</div><div class="upload-text">اضغط للرفع</div></div>
+    <input type="file" id="exitImagesInput" multiple accept="image/*" style="display:none" onchange="handleExitImages(this.files)">
+    <div id="exitImagesList" style="margin-top:12px"></div>
+  </div>
+  <div class="card" style="padding:22px;margin-bottom:18px"><div class="fg"><label>ملاحظات</label><textarea rows="2" id="exitNotes"></textarea></div></div>
+  <button class="btn bp" onclick="submitExit()">📨 إرسال للمعتمد</button>
+</div>
+
+<!-- طلباتي -->
+<div class="screen" id="screen-my-requests">
+  <div class="ph"><div><div class="pt">📋 طلباتي</div></div></div>
+  <div class="filter-bar">
+    <div class="search-input"><input type="text" id="myReqSearch" placeholder="بحث..." oninput="rmr()"></div>
+    <div class="filter-tags" id="myReqTypeTags">
+      <button class="filter-tag active" data-mr="single" onclick="setMyReqType('single',this)">🧑 دخول</button>
+      <button class="filter-tag" data-mr="exit" onclick="setMyReqType('exit',this)">🚪 خروج</button>
+      <button class="filter-tag" data-mr="vehicle" onclick="setMyReqType('vehicle',this)">🚗 مركبات</button>
+    </div>
+    <div class="filter-tags" id="myReqStatusTags">
+      <button class="filter-tag active" data-ms="all" onclick="setMyReqStatus('all',this)">📋 الكل</button>
+      <button class="filter-tag" data-ms="pending" onclick="setMyReqStatus('pending',this)">🆕 جديدة</button>
+      <button class="filter-tag" data-ms="active" onclick="setMyReqStatus('active',this)">✅ موافقة</button>
+      <button class="filter-tag" data-ms="expired" onclick="setMyReqStatus('expired',this)">⏱ منتهية</button>
+    </div>
+  </div>
+  <div class="tbl-wrap">
+    <table><thead><tr><th>الرقم</th><th>الاسم</th><th>نوع التصريح</th><th>🏢</th><th>🏬</th><th>🛣️</th><th>من</th><th>إلى</th><th>الحالة</th><th>إجراءات</th></tr></thead><tbody id="myRequestsTbody"></tbody></table>
+    <div class="pager" id="myReqPager"></div>
+    <div id="myRequestsEmpty" class="hint" style="display:none;padding:40px;text-align:center">لا توجد نتائج</div>
+  </div>
+</div>
+
+<!-- سجل الأشخاص -->
+<div class="screen" id="screen-registry">
+  <div class="ph"><div><div class="pt">🧑 سجل الأشخاص — <span id="registryBranchLabel">—</span></div></div><button class="btn bp" data-perm="add" onclick="openAddPerson()">➕ تسجيل شخص</button></div>
+  <div class="filter-bar"><div class="search-input"><input type="text" id="registrySearch" placeholder="بحث..." oninput="rre()"></div></div>
+  <div class="tbl-wrap">
+    <table><thead><tr><th>الصورة</th><th>الاسم</th><th>الجهة</th><th>النوع</th><th>الهوية</th><th>الجنسية</th><th>أضافها</th><th>إجراءات</th></tr></thead><tbody id="registryTbody"></tbody></table>
+    <div class="pager" id="registryPager"></div>
+    <div id="registryEmpty" class="hint" style="display:none;padding:24px;text-align:center">لا يوجد أشخاص</div>
+  </div>
+</div>
+
+<!-- سجل التصاريح -->
+<div class="screen" id="screen-permitslog">
+  <div class="ph"><div><div class="pt">📋 سجل التصاريح</div></div></div>
+  <div class="filter-bar">
+    <div class="search-input"><input type="text" id="permitsLogSearch" placeholder="بحث..." oninput="rpl()"></div>
+    <select class="filter-select" id="permitsLogType" onchange="rpl()"><option value="all">كل الأنواع</option><option value="single">🧑 أشخاص</option><option value="vehicle">🚗 مركبات</option><option value="exit">🚪 خروج</option></select>
+    <select class="filter-select" id="permitsLogBranch" onchange="rpl()"></select>
+    <select class="filter-select" id="permitsLogBuilding" onchange="rpl()"></select>
+    <div class="filter-tags" id="permitsLogTags">
+      <button class="filter-tag active" data-f="all" onclick="setPermitsLogFilter('all',this)">الكل</button>
+      <button class="filter-tag" data-f="active" onclick="setPermitsLogFilter('active',this)">✅ نشط</button>
+      <button class="filter-tag" data-f="expired" onclick="setPermitsLogFilter('expired',this)">⏱ منتهي</button>
+      <button class="filter-tag" data-f="suspended" onclick="setPermitsLogFilter('suspended',this)">⏸️ موقوف</button>
+    </div>
+  </div>
+  <div class="tbl-wrap">
+    <table><thead><tr><th>الرقم</th><th>الاسم</th><th>النوع</th><th>🏢</th><th>🏬</th><th>🛣️</th><th>حتى</th><th>الحالة</th><th>عرض</th></tr></thead><tbody id="permitsLogTbody"></tbody></table>
+    <div class="pager" id="permitsLogPager"></div>
+    <div id="permitsLogEmpty" class="hint" style="display:none;padding:24px;text-align:center">لا توجد نتائج</div>
+  </div>
+</div>
+
+<!-- الاعتمادات -->
+<div class="screen" id="screen-approvals">
+  <div class="ph"><div><div class="pt">📨 طلبات التصريح</div></div></div>
+  <div class="alert-banner info"><div class="alert-ico">📝</div><div><div class="alert-text-title">ملاحظات مقدم الطلب تظهر داخل زر "تفاصيل" مع دعم الاعتماد الجزئي والملاحظات</div></div></div>
+  <div class="tbl-wrap">
+    <table><thead><tr><th>الطلب</th><th>النوع</th><th>الإدارة</th><th>🏢</th><th>🏬</th><th>إجراءات</th></tr></thead><tbody id="approvalsBody"></tbody></table>
+    <div class="pager" id="approvalsPager"></div>
+    <div id="approvalsEmpty" class="hint" style="display:none;padding:24px;text-align:center">لا توجد طلبات</div>
+  </div>
+</div>
+
+<!-- شاشة الاستعلام -->
+<div class="screen" id="screen-gate">
+  <div class="ph"><div><div class="pt">🛡️ شاشة الاستعلام</div><div class="ps" id="gateSubtitle"></div></div></div>
+  <div class="card" style="padding:20px;margin-bottom:18px">
+    <div class="filter-tags" style="margin-bottom:14px">
+      <button class="filter-tag active" id="gmPerson" onclick="setGateMode('person')">🧑 فرد</button>
+      <button class="filter-tag" id="gmVehicle" onclick="setGateMode('vehicle')">🚗 مركبة</button>
+      <button class="filter-tag" id="gmExit" onclick="setGateMode('exit')">🚪 خروج</button>
+    </div>
+    <div class="fg2" style="align-items:end">
+      <div class="fg"><label>البوابة <span class="req">*</span></label><select id="gateSelectAtQuery"></select></div>
+      <div class="fg"><label id="gateSearchLabel">آخر 4 أرقام</label><input type="text" id="gateSearch" maxlength="10" autocomplete="off"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <button class="btn bgold" onclick="xQR()">📷 مسح QR</button>
+      <button class="btn bg2" onclick="xClear()">🗑 مسح</button>
+    </div>
+    <p class="hint" style="margin-top:10px" id="gateHint"></p>
+  </div>
+  <div id="gateResult" class="grid2"></div>
+  <div class="tbl-wrap" style="margin-top:18px">
+    <div class="tbl-head"><span class="tbl-title">🕒 آخر الاستعلامات</span><span class="glive"><span class="pulse-dot"></span><span id="gateClock">--:--:--</span></span></div>
+    <div id="gateRecent" class="grecent"></div>
+  </div>
+</div>
+
+<!-- طباعة البطاقات -->
+<div class="screen" id="screen-cardprint">
+  <div class="ph"><div><div class="pt">🖨️ طباعة البطاقات</div></div></div>
+  <div class="grid2">
+    <div class="card" style="padding:20px">
+      <div class="sdv">🔍 اختر الشخص</div>
+      <div class="fg" style="margin-bottom:14px"><input type="text" id="cardPrintSearch" placeholder="ابحث..." oninput="searchForCard(this.value)"></div>
+      <div class="search-results" id="cardPrintResults" style="display:none"></div>
+      <div id="cardPrintSelectedInfo" class="hint">لم يتم اختيار</div>
+    </div>
+    <div class="card" style="padding:22px;text-align:center">
+      <div id="cardPrintBox"><div class="hint" style="padding:40px 0">اختر شخصاً</div></div>
+      <button class="btn bgold btn-block" id="cardPrintBtn" style="margin-top:16px;display:none" onclick="printCard()">🖨️ طباعة</button>
+    </div>
+  </div>
+</div>
+
+<!-- سجل الاستعلامات -->
+<div class="screen" id="screen-querylog">
+  <div class="ph"><div><div class="pt">🧾 سجل الاستعلامات</div></div></div>
+  <div class="filter-bar">
+    <div class="search-input"><input type="text" id="queryLogSearch" placeholder="بحث..." oninput="rql()"></div>
+    <div class="filter-tags" id="queryLogTags">
+      <button class="filter-tag active" data-f="all" onclick="setQueryLogFilter('all',this)">الكل</button>
+      <button class="filter-tag" data-f="active" onclick="setQueryLogFilter('active',this)">✔ ساري</button>
+      <button class="filter-tag" data-f="expired" onclick="setQueryLogFilter('expired',this)">⏱ منتهي</button>
+    </div>
+  </div>
+  <div class="tbl-wrap">
+    <table><thead><tr><th>الوقت</th><th>الرقم</th><th>الاسم</th><th>الجنسية</th><th>البوابة</th><th>النتيجة</th></tr></thead><tbody id="queryLogTbody"></tbody></table>
+    <div class="pager" id="queryLogPager"></div>
+    <div id="queryLogEmpty" class="hint" style="display:none;padding:24px;text-align:center">لا توجد استعلامات</div>
+  </div>
+</div>
+
+<!-- القائمة السوداء -->
+<div class="screen" id="screen-blacklist">
+  <div class="ph"><div><div class="pt">⛔ القائمة السوداء — <span id="blBranchLabel">—</span></div></div><button class="btn bred" data-perm="add" onclick="openAddBlacklist()">➕ إضافة</button></div>
+  <div class="grid2">
+    <div class="card" style="padding:20px">
+      <div class="sdv">🌍 الجنسيات الممنوعة</div>
+      <button class="btn bred bsm" style="margin-bottom:14px" data-perm="add" onclick="addBn()">⛔ منع جنسية</button>
+      <div class="chips-wrap" id="bannedNatChips"></div>
+    </div>
+    <div class="tbl-wrap">
+      <div class="tbl-head"><span class="tbl-title">قائمة الحظر</span><input type="text" id="blacklistSearch" placeholder="🔍 بحث بالاسم أو الهوية أو السبب..." oninput="rbl()" style="width:260px;max-width:100%"></div>
+      <table><thead><tr><th>الرقم</th><th>الاسم</th><th>السبب</th><th>إجراء</th></tr></thead><tbody id="blacklistTbody"></tbody></table>
+      <div class="pager" id="blacklistPager"></div>
+      <div id="blacklistEmpty" class="hint" style="display:none;padding:24px;text-align:center">لا يوجد محظورون</div>
+    </div>
+  </div>
+</div>
+
+<!-- الفروع -->
+<div class="screen" id="screen-branches">
+  <div class="ph"><div><div class="pt">🏢 الفروع</div></div><button class="btn bp" data-perm="add" onclick="openAddBranch()">➕ فرع جديد</button></div>
+  <div class="grid4" style="margin-bottom:20px">
+    <div class="stat-box"><div class="stat-ico">🏢</div><div class="stat-val" id="branchesCount">0</div><div class="stat-lbl">الفروع</div></div>
+    <div class="stat-box"><div class="stat-ico">🏬</div><div class="stat-val" id="branchesBuildingsCount">0</div><div class="stat-lbl">المباني</div></div>
+    <div class="stat-box"><div class="stat-ico">🚪</div><div class="stat-val" id="branchesGatesCount">0</div><div class="stat-lbl">البوابات</div></div>
+    <div class="stat-box"><div class="stat-ico">🛣️</div><div class="stat-val" id="branchesPathsCount">0</div><div class="stat-lbl">المسارات</div></div>
+  </div>
+  <div id="branchesGrid" class="grid3"></div>
+</div>
+
+<!-- المباني -->
+<div class="screen" id="screen-buildings">
+  <div class="ph"><div><div class="pt">🏬 المباني</div></div><button class="btn bp" data-perm="add" onclick="openAddBuilding()">➕ مبنى جديد</button></div>
+  <div class="filter-bar">
+    <div class="fg" style="max-width:340px;margin:0"><label>🏢 الفرع</label><select id="buildingsBranchSelect" onchange="setBranch(this.value)"></select></div>
+  </div>
+  <div id="buildingsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px"></div>
+  <div id="buildingsEmpty" class="hint" style="display:none;padding:40px;text-align:center;border:1.5px dashed var(--g200);border-radius:12px;margin-top:18px">لا يوجد مباني</div>
+</div>
+
+<!-- المسارات -->
+<div class="screen" id="screen-paths">
+  <div class="ph"><div><div class="pt">🛣️ البوابات والمسارات</div></div></div>
+  <div class="filter-bar">
+    <div class="fg" style="max-width:340px;margin:0"><label>🏢 الفرع</label><select id="pathsScreenBranchSelect" onchange="setBranch(this.value)"></select></div>
+    <div class="filter-tags" style="margin-right:auto">
+      <button class="filter-tag active" data-ptab="gates" onclick="setPathsTab('gates',this)">🚪 البوابات</button>
+      <button class="filter-tag" data-ptab="paths" onclick="setPathsTab('paths',this)">📋 المسارات</button>
+      <button class="filter-tag" data-ptab="devices" onclick="setPathsTab('devices',this)">📱 الأجهزة</button>
+    </div>
+  </div>
+  <div id="pathsTab-gates">
+    <div id="deviceMacBar" class="card" style="padding:12px 14px;margin-bottom:12px"></div>
+    <div class="ph" style="margin-bottom:12px"><div><div class="pt" style="font-size:15px">🚪 البوابات</div></div><button class="btn bp bxs" data-perm="add" onclick="addGate()">➕ بوابة جديدة</button></div>
+    <div class="filter-bar">
+      <div class="search-input"><input type="text" id="gsSearch" placeholder="بحث باسم البوابة أو الجهاز أو MAC أو المسار..." oninput="rg()"></div>
+      <select class="filter-select" id="gsBuilding" onchange="rg()"></select>
+      <select class="filter-select" id="gsDevices" onchange="rg()"><option value="all">📱 كل البوابات</option><option value="none">⚠️ بدون أجهزة</option><option value="one">جهاز واحد</option><option value="multi">أكثر من جهاز</option></select>
+    </div>
+    <div class="tbl-wrap"><table><thead><tr><th>الاسم</th><th>المبنى</th><th>الموقع</th><th>الأجهزة</th><th>مسار</th><th>إجراءات</th></tr></thead><tbody id="gatesSettingsTbody"></tbody></table><div class="pager" id="gatesSettingsPager"></div><div id="gatesSettingsEmpty" class="hint" style="display:none;padding:24px;text-align:center">لا توجد بوابات</div></div>
+  </div>
+  <div id="pathsTab-paths" style="display:none">
+    <div class="ph" style="margin-bottom:12px"><div><div class="pt" style="font-size:15px">📋 المسارات</div></div><button class="btn bp bxs" data-perm="add" onclick="openAddPath()">➕ مسار جديد</button></div>
+    <div id="pathsContainer"></div>
+  </div>
+  <div id="pathsTab-devices" style="display:none">
+    <div class="ph" style="margin-bottom:12px"><div><div class="pt" style="font-size:15px">📱 حصر الأجهزة</div><div class="ps">كل الأجهزة المربوطة بالبوابات</div></div><button class="btn bgold bxs" onclick="exportDevicesCsv()">📊 تصدير CSV</button></div>
+    <div class="grid4" style="margin-bottom:14px">
+      <div class="stat-box"><div class="stat-ico">📱</div><div class="stat-val" id="dvStatTotal">0</div><div class="stat-lbl">إجمالي الأجهزة</div></div>
+      <div class="stat-box"><div class="stat-ico">🚪</div><div class="stat-val" id="dvStatWith">0</div><div class="stat-lbl">بوابات مجهزة</div></div>
+      <div class="stat-box"><div class="stat-ico">⚠️</div><div class="stat-val" id="dvStatNone">0</div><div class="stat-lbl">بوابات بدون أجهزة</div></div>
+      <div class="stat-box"><div class="stat-ico">🔀</div><div class="stat-val" id="dvStatMulti">0</div><div class="stat-lbl">بوابات بأكثر من جهاز</div></div>
+    </div>
+    <div class="filter-bar">
+      <div class="search-input"><input type="text" id="dvSearch" placeholder="بحث باسم الجهاز أو MAC أو البوابة..." oninput="rdv()"></div>
+      <select class="filter-select" id="dvBranch" onchange="rdv()"></select>
+      <select class="filter-select" id="dvGate" onchange="rdv()"></select>
+      <select class="filter-select" id="dvKind" onchange="rdv()"><option value="all">📋 الأجهزة وكل البوابات</option><option value="devices">📱 الأجهزة فقط</option><option value="none">⚠️ بوابات بدون أجهزة</option><option value="multi">🔀 بوابات بأكثر من جهاز</option></select>
+    </div>
+    <div class="tbl-wrap">
+      <table><thead><tr><th>الجهاز</th><th>MAC</th><th>البوابة</th><th>المبنى</th><th>الفرع</th><th>آخر ظهور</th><th>إجراءات</th></tr></thead><tbody id="devicesTbody"></tbody></table>
+      <div class="pager" id="devicesPager"></div>
+      <div id="devicesEmpty" class="hint" style="display:none;padding:24px;text-align:center">لا توجد أجهزة مطابقة</div>
+    </div>
+  </div>
+</div>
+
+<!-- الإدارات -->
+<div class="screen" id="screen-departments">
+  <div class="ph"><div><div class="pt">🏛️ الإدارات والأقسام</div></div><div style="display:flex;gap:8px"><button class="btn bg2" onclick="rde()">🔄 تحديث</button><button class="btn bp" data-perm="add" onclick="openAddDepartment(null)">➕ إدارة رئيسية</button></div></div>
+  <div class="filter-bar">
+    <div class="fg" style="max-width:340px;margin:0"><label>🏢 الفرع</label><select id="depsBranchSelect" onchange="setBranch(this.value)"></select></div>
+  </div>
+  <div id="depsTreeContainer" class="card" style="padding:20px"></div>
+</div>
+
+<!-- المستخدمون -->
+<div class="screen" id="screen-users">
+  <div class="ph"><div><div class="pt">👤 المستخدمون والصلاحيات</div><div class="ps">إنشاء، تعديل، ربط بالفروع والإدارات</div></div><button class="btn bp" data-perm="add" onclick="openAddUser()">➕ مستخدم جديد</button></div>
+  <div class="grid4" style="margin-bottom:20px">
+    <div class="stat-box"><div class="stat-ico">👥</div><div class="stat-val" id="usersTotalCount">0</div><div class="stat-lbl">الإجمالي</div></div>
+    <div class="stat-box"><div class="stat-ico">✅</div><div class="stat-val" id="usersActiveCount">0</div><div class="stat-lbl">نشط</div></div>
+    <div class="stat-box"><div class="stat-ico">⏸️</div><div class="stat-val" id="usersInactiveCount">0</div><div class="stat-lbl">موقوف</div></div>
+    <div class="stat-box"><div class="stat-ico">👑</div><div class="stat-val" id="usersAdminCount">0</div><div class="stat-lbl">مدراء</div></div>
+  </div>
+  <div class="filter-bar">
+    <div class="search-input"><input type="text" id="userSearch" placeholder="بحث..." oninput="rut()"></div>
+    <select class="filter-select" id="userRoleFilter" onchange="rut()"><option value="">كل الأدوار</option></select>
+    <select class="filter-select" id="userBranchFilter" onchange="rut()"><option value="">كل الفروع</option></select>
+    <div class="filter-tags" id="userStatusTags">
+      <button class="filter-tag active" data-f="all" onclick="setUserStatusFilter('all',this)">الكل</button>
+      <button class="filter-tag" data-f="active" onclick="setUserStatusFilter('active',this)">✅ نشط</button>
+      <button class="filter-tag" data-f="inactive" onclick="setUserStatusFilter('inactive',this)">⏸️ موقوف</button>
+    </div>
+  </div>
+  <div class="tbl-wrap">
+    <table><thead><tr><th>المستخدم</th><th>اسم الدخول</th><th>الدور</th><th>الإدارة والفروع</th><th>الشاشات</th><th>الحالة</th><th>إجراءات</th></tr></thead><tbody id="usersTbody"></tbody></table>
+    <div class="pager" id="usersPager"></div>
+    <div id="usersEmpty" class="hint" style="display:none;padding:24px;text-align:center">لا توجد نتائج</div>
+  </div>
+</div>
+
+<!-- قوائم الاختيار -->
+<div class="screen" id="screen-lookups">
+  <div class="ph"><div><div class="pt">📚 قوائم الاختيار</div></div><button class="btn bg2" onclick="rlk()">🔄 تحديث</button></div>
+  <div class="lookup-grid" id="lookupsGrid"></div>
+</div>
+
+<!-- تصميم البطاقة -->
+<div class="screen" id="screen-cardtemplate">
+  <div class="ph"><div><div class="pt">🪪 تصميم البطاقة</div></div></div>
+  <div class="grid2">
+    <div class="card" style="padding:22px">
+      <div class="sdv">🔳 نوع الرمز</div>
+      <div class="code-toggle"><button id="codeBtn-qr" onclick="setCardCode('qr')">🔳 QR</button><button class="active" id="codeBtn-barcode" onclick="setCardCode('barcode')">▌‖▌ باركود</button></div>
+    </div>
+    <div class="card" style="padding:22px"><div class="sdv">👁️ معاينة</div><div id="cardTemplatePreviewBox"></div></div>
+  </div>
+</div>
+
+<!-- إعدادات النظام -->
+<div class="screen" id="screen-systemsettings"></div>
+
+<!-- سجل النظام -->
+<div class="screen" id="screen-auditlog">
+  <div class="ph"><div><div class="pt">📜 سجل النظام</div></div><div style="display:flex;gap:8px"><button class="btn bg2 bxs" onclick="printAudit()">🖨️</button><button class="btn bgold bxs" onclick="exportAuditExcel()">📊</button></div></div>
+  <div class="filter-bar">
+    <div class="search-input"><input type="text" id="auditLogSearch" placeholder="بحث..." oninput="ral()"></div>
+    <select class="filter-select" id="auditLogType" onchange="ral()"><option value="all">كل الأنواع</option><option value="add">➕ إضافة</option><option value="edit">✏️ تعديل</option><option value="del">❌ حذف</option></select>
+  </div>
+  <div class="tbl-wrap">
+    <table><thead><tr><th>#</th><th>التاريخ</th><th>النوع</th><th>العملية</th><th>التفاصيل</th><th>المستخدم</th></tr></thead><tbody id="auditLogTbody"></tbody></table>
+    <div class="pager" id="auditLogPager"></div>
+    <div id="auditLogEmpty" class="hint" style="display:none;padding:24px;text-align:center">لا توجد عمليات</div>
+  </div>
+</div>
+
+<!-- التقارير -->
+<div class="screen" id="screen-reports">
+  <div class="ph"><div><div class="pt">📊 التقارير الشاملة</div></div></div>
+  <div class="filter-bar">
+    <select class="filter-select" id="repBranchFilter" onchange="rr()"></select>
+    <select class="filter-select" id="repBuildingFilter" onchange="rr()"></select>
+    <select class="filter-select" id="repDeptFilter" onchange="rr()"></select>
+    <select class="filter-select" id="repTypeFilter" onchange="rr()"><option value="all">كل الأنواع</option><option value="single">🧑 أشخاص</option><option value="vehicle">🚗 مركبات</option><option value="exit">🚪 خروج</option></select>
+    <button class="btn bgold bxs" style="margin-right:auto" onclick="exportReportsExcel()">📊 تصدير Excel</button>
+  </div>
+  <div class="kpi-row" style="margin-bottom:18px">
+    <div class="kpi-box"><div class="kpi-val" id="repTotalPermits">0</div><div class="kpi-lbl">إجمالي</div></div>
+    <div class="kpi-box"><div class="kpi-val" id="repActivePermits">0</div><div class="kpi-lbl">نشطة</div></div>
+    <div class="kpi-box"><div class="kpi-val" id="repExpiredPermits">0</div><div class="kpi-lbl">منتهية</div></div>
+    <div class="kpi-box"><div class="kpi-val" id="repSuspendedPermits">0</div><div class="kpi-lbl">موقوفة</div></div>
+  </div>
+  <div class="grid2" style="margin-bottom:18px">
+    <div class="report-card"><div class="report-card-title">🏢 حسب الفرع</div><div id="reportsByBranch" class="bar-chart"></div></div>
+    <div class="report-card"><div class="report-card-title">🏬 حسب المبنى</div><div id="reportsByBuilding" class="bar-chart"></div></div>
+  </div>
+  <div class="grid2" style="margin-bottom:18px">
+    <div class="report-card"><div class="report-card-title">🏛️ حسب الإدارة</div><div id="reportsByDept" class="bar-chart"></div></div>
+    <div class="report-card"><div class="report-card-title">🛣️ حسب المسار</div><div id="reportsByPath" class="bar-chart"></div></div>
+  </div>
+  <div class="report-card">
+    <div class="report-card-title">📋 جدول مفصّل</div>
+    <div class="tbl-wrap">
+      <table><thead><tr><th>الرقم</th><th>الاسم</th><th>النوع</th><th>🏢</th><th>🏬</th><th>🏛️</th><th>🛣️</th><th>من</th><th>إلى</th><th>الحالة</th></tr></thead><tbody id="reportsDetailedTable"></tbody></table>
+      <div class="pager" id="reportsPager"></div>
+    </div>
+  </div>
+</div>
+
+</div></div>
+
+<!-- ═══════ المودالات ═══════ -->
+<div class="mover" id="modalAddPerson"><div class="modal modal-lg"><div class="mh"><div class="mht">🧑 تسجيل شخص — <span id="addPersonBranchName"></span></div><button class="mc" onclick="closeModal('modalAddPerson')">✕</button></div><div class="mb">
+  <div class="fg3" style="margin-bottom:12px">
+    <div class="fg"><label>الاسم <span class="req">*</span></label><input type="text" id="newPersonName"></div>
+    <div class="fg"><label>النوع</label><select id="newPersonType"></select></div>
+    <div class="fg"><label>الجنسية <span class="req">*</span></label><select id="newPersonNat"></select></div>
+  </div>
+  <div class="alert-banner warn" id="newPersonNatWarning" style="display:none"><div class="alert-ico">⛔</div><div><div class="alert-text-title">جنسية ممنوعة</div></div></div>
+  <div class="fg3" style="margin-bottom:12px">
+    <div class="fg"><label>نوع الهوية</label><select id="newPersonIdType"></select></div>
+    <div class="fg"><label>رقم الهوية <span class="req">*</span></label><input type="text" id="newPersonIdNo"></div>
+    <div class="fg"><label>الجهة</label><input type="text" id="newPersonEntity"></div>
+  </div>
+  <div id="personAttachSection"></div>
+  <div class="bgrp"><button class="btn bg2" onclick="closeModal('modalAddPerson')">إلغاء</button><button class="btn bp" onclick="saveNewPerson()">💾 حفظ</button></div>
+</div></div></div>
+
+<div class="mover" id="modalAddPath"><div class="modal"><div class="mh"><div class="mht">🛣️ مسار جديد</div><button class="mc" onclick="closeModal('modalAddPath')">✕</button></div><div class="mb">
+  <div id="pathStep1">
+    <div class="fg" style="margin-bottom:12px"><label>اسم المسار</label><input type="text" id="newPathName"></div>
+    <div class="fg" style="margin-bottom:12px"><label>🏢 الفرع</label><select id="newPathBranch" onchange="onNewPathBranchChange()"></select></div>
+    <div class="fg" style="margin-bottom:16px"><label>🏬 المبنى</label><select id="newPathBuilding"></select></div>
+    <div class="bgrp"><button class="btn bg2" onclick="closeModal('modalAddPath')">إلغاء</button><button class="btn bp" onclick="goPathStep2()">التالي ←</button></div>
+  </div>
+  <div id="pathStep2" style="display:none">
+    <div class="alert-banner success"><div class="alert-ico">✅</div><div><div class="alert-text-title">أضف بوابات لمسار "<span id="pathNameDisplay"></span>"</div></div></div>
+    <div class="fg" style="margin-bottom:8px"><input type="text" id="gateSearchForPath" placeholder="ابحث..." oninput="searchGatesForPath(this.value)"><div class="search-results" id="gateSearchForPathResults" style="display:none"></div></div>
+    <button type="button" class="btn bg2 bsm" style="margin-bottom:8px" onclick="showAllGatesForPath()">📋 عرض كل البوابات</button>
+    <div id="selectedGatesChips" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px"></div>
+    <div class="hint" id="noGatesHint">لم تتم إضافة بوابة</div>
+    <div class="bgrp"><button class="btn bg2" onclick="backPathStep1()">→ السابق</button><button class="btn bp" onclick="savePath()">💾 حفظ</button></div>
+  </div>
+</div></div></div>
+
+<div class="mover" id="modalDepartment"><div class="modal modal-lg"><div class="mh"><div class="mht" id="depModalTitle">🏛️ إدارة</div><button class="mc" onclick="closeModal('modalDepartment')">✕</button></div><div class="mb">
+  <input type="hidden" id="depId">
+  <div class="fg3" style="margin-bottom:12px">
+    <div class="fg"><label>الاسم <span class="req">*</span></label><input type="text" id="depName"></div>
+    <div class="fg"><label>الكود <span class="req">*</span></label><input type="text" id="depCode"></div>
+    <div class="fg"><label>المستوى</label><select id="depLevel" onchange="onDepLevelChange()"><option value="1">🏛️ رئيسية</option><option value="2">📂 فرعية</option><option value="3">📁 قسم</option></select></div>
+  </div>
+  <div class="fg" style="margin-bottom:12px"><label>🏢 الفرع</label><select id="depBranchSelectModal"></select></div>
+  <div class="fg" id="depParentWrap" style="margin-bottom:12px;display:none"><label>الأعلى</label><select id="depParentId"></select></div>
+  <div class="fg2" style="margin-bottom:12px"><div class="fg"><label>المدير</label><input type="text" id="depManager"></div><div class="fg"><label>البريد</label><input type="email" id="depEmail"></div></div>
+  <div class="bgrp"><button class="btn bg2" onclick="closeModal('modalDepartment')">إلغاء</button><button class="btn bp" onclick="saveDepartment()">💾 حفظ</button></div>
+</div></div></div>
+
+<div class="mover" id="modalBuilding"><div class="modal modal-lg"><div class="mh"><div class="mht" id="buildingModalTitle">🏬 مبنى</div><button class="mc" onclick="closeModal('modalBuilding')">✕</button></div><div class="mb">
+  <input type="hidden" id="bldgId">
+  <div class="fg3" style="margin-bottom:12px">
+    <div class="fg"><label>الاسم <span class="req">*</span></label><input type="text" id="bldgName"></div>
+    <div class="fg"><label>الكود <span class="req">*</span></label><input type="text" id="bldgCode"></div>
+    <div class="fg"><label>النوع</label><select id="bldgType"></select></div>
+  </div>
+  <div class="fg" style="margin-bottom:12px"><label>🏢 الفرع</label><select id="bldgBranch"></select></div>
+  <div class="fg3" style="margin-bottom:12px"><div class="fg"><label>الأدوار</label><input type="number" id="bldgFloors" value="1" min="1"></div><div class="fg"><label>المدير</label><input type="text" id="bldgManager"></div><div class="fg"><label>الهاتف</label><input type="text" id="bldgPhone"></div></div>
+  <div class="bgrp"><button class="btn bg2" onclick="closeModal('modalBuilding')">إلغاء</button><button class="btn bp" onclick="saveBuilding()">💾 حفظ</button></div>
+</div></div></div>
+
+<div class="mover" id="modalGate"><div class="modal"><div class="mh"><div class="mht" id="gateModalTitle">🚪 بوابة</div><button class="mc" onclick="closeModal('modalGate')">✕</button></div><div class="mb">
+  <input type="hidden" id="gateId">
+  <div class="fg" style="margin-bottom:12px"><label>الاسم <span class="req">*</span></label><input type="text" id="gateName"></div>
+  <div class="fg" style="margin-bottom:12px"><label>🏢 الفرع</label><select id="gateBranch" onchange="refreshBuildingForGate()"></select></div>
+  <div class="fg" style="margin-bottom:12px"><label>🏬 المبنى <span class="req">*</span></label><select id="gateBuilding"></select></div>
+  <div class="fg" style="margin-bottom:12px"><label>📍 الموقع</label><select id="gateLocation"></select></div>
+  <input type="hidden" id="gateMac">
+  <div class="fg" style="margin-bottom:12px"><label>📱 أجهزة البوابة <span id="gateDevCount" class="badge bgry">0</span></label>
+    <div id="gateDevRows" class="dev-rows"></div>
+    <button type="button" class="btn bg2 bxs" onclick="gdAddRow()">➕ إضافة جهاز</button>
+    <div class="hint" style="margin-top:6px">يمكن ربط أكثر من جهاز بنفس البوابة — عند فتح التطبيق على أي جهاز منها تتعرف شاشة الاستعلام تلقائياً على الفرع والمبنى والبوابة.</div>
+  </div>
+  <div class="bgrp"><button class="btn bg2" onclick="closeModal('modalGate')">إلغاء</button><button class="btn bp" onclick="saveGate()">💾 حفظ</button></div>
+</div></div></div>
+
+<div class="mover" id="modalViewPermit"><div class="modal modal-lg"><div class="mh"><div class="mht">👁️ <span id="viewPermitTitleTop"></span></div><button class="mc" onclick="closeModal('modalViewPermit')">✕</button></div><div class="mb" id="modalViewPermitBody"></div></div></div>
+
+<div class="mover" id="modalViewApproval"><div class="modal modal-lg"><div class="mh"><div class="mht">👁️ تفاصيل الطلب</div><button class="mc" onclick="closeModal('modalViewApproval')">✕</button></div><div class="mb" id="modalViewApprovalBody"></div></div></div>
+
+<div class="mover" id="modalApprovalAction"><div class="modal"><div class="mh"><div class="mht" id="apaTitle">قرار</div><button class="mc" onclick="closeModal('modalApprovalAction')">✕</button></div><div class="mb">
+  <div class="alert-banner info" id="apaBanner"><div class="alert-ico" id="apaIco">✔</div><div><div class="alert-text-title" id="apaSub">—</div></div></div>
+  <div class="fg" style="margin-bottom:16px"><label id="apaNoteLabel">ملاحظة</label><textarea rows="3" id="apaNote"></textarea></div>
+  <div class="bgrp"><button class="btn bg2" onclick="closeModal('modalApprovalAction')">إلغاء</button><button class="btn bp" id="apaConfirmBtn" onclick="confirmApproval()">تأكيد</button></div>
+</div></div></div>
+
+<div class="mover" id="modalUser"><div class="modal modal-lg"><div class="mh"><div class="mht" id="userModalTitle">👤 مستخدم</div><button class="mc" onclick="closeModal('modalUser')">✕</button></div><div class="mb">
+  <input type="hidden" id="userId">
+  <div class="sdv">🔐 معلومات الدخول</div>
+  <div class="fg3" style="margin-bottom:12px"><div class="fg"><label>الاسم <span class="req">*</span></label><input type="text" id="userFullName"></div><div class="fg"><label>اسم المستخدم <span class="req">*</span></label><input type="text" id="userUsername"></div><div class="fg"><label>البريد</label><input type="email" id="userEmail"></div></div>
+  <div class="fg3" style="margin-bottom:12px"><div class="fg"><label>كلمة المرور</label><input type="password" id="userPassword"></div><div class="fg"><label>تأكيد</label><input type="password" id="userPasswordConfirm"></div><div class="fg"><label>الجوال</label><input type="text" id="userPhone"></div></div>
+  <div class="sdv">🏢 الفرع <span class="req">*</span></div>
+  <div class="fg" style="margin-bottom:14px"><select id="userMainBranch" onchange="onUserBranchChange()"><option value="">— اختر الفرع —</option></select></div>
+  <div class="sdv">🏛️ الإدارة</div>
+  <div class="fg2" style="margin-bottom:12px"><div class="fg"><label>الإدارة الرئيسية</label><select id="userMainDept" onchange="onUserMainDeptChange()"><option value="">— اختر الفرع أولاً —</option></select></div><div class="fg"><label>الإدارة الفرعية</label><select id="userSubDept" onchange="onUserSubDeptChange()"><option value="">— بدون —</option></select></div></div>
+  <div class="fg2" style="margin-bottom:14px"><div class="fg"><label>القسم</label><select id="userSectionDept"><option value="">— بدون —</option></select></div><div class="fg"><label>الوظيفة</label><input type="text" id="userJobTitle"></div></div>
+  <div class="sdv">🎭 الدور</div>
+  <div class="grid3" id="userRoleCards" style="margin-bottom:14px"></div>
+  <div id="userGatesWrap" style="display:none;margin-bottom:14px"><div class="sdv">🚪 البوابات</div><div class="check-grid" id="userGatesGrid"></div></div>
+  <div class="sdv">🔐 الشاشات</div>
+  <div class="filter-tags" style="margin-bottom:10px">
+    <button type="button" class="filter-tag" onclick="toggleAllPerms(true)">✅ الكل</button>
+    <button type="button" class="filter-tag" onclick="toggleAllPerms(false)">✖ إلغاء</button>
+    <button type="button" class="filter-tag" onclick="arp()">🎯 حسب الدور</button>
+  </div>
+  <div class="check-grid" id="userPermissionsGrid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:14px"></div>
+  <div class="tgl-row" style="background:var(--gp);border:1.5px solid var(--glight);border-radius:var(--r);padding:12px 16px;margin-bottom:16px"><div class="tgl-info"><div class="tgl-lbl">حساب نشط</div></div><label class="tgl"><input type="checkbox" id="userStatusToggle" checked><span class="tgl-slider"></span></label></div>
+  <div class="bgrp"><button class="btn bg2" onclick="closeModal('modalUser')">إلغاء</button><button class="btn bp" onclick="saveUser()">💾 حفظ</button></div>
+</div></div></div>
+
+<div class="mover" id="modalBranch"><div class="modal modal-lg"><div class="mh"><div class="mht" id="branchModalTitle">🏢 فرع</div><button class="mc" onclick="closeModal('modalBranch')">✕</button></div><div class="mb">
+  <input type="hidden" id="branchId">
+  <div class="fg3" style="margin-bottom:12px"><div class="fg"><label>الاسم <span class="req">*</span></label><input type="text" id="branchName"></div><div class="fg"><label>الكود <span class="req">*</span></label><input type="text" id="branchCode"></div><div class="fg"><label>المدينة</label><input type="text" id="branchCity"></div></div>
+  <div class="fg2" style="margin-bottom:12px"><div class="fg"><label>المدير</label><input type="text" id="branchManager"></div><div class="fg"><label>الهاتف</label><input type="text" id="branchPhone"></div></div>
+  <div class="bgrp"><button class="btn bg2" onclick="closeModal('modalBranch')">إلغاء</button><button class="btn bp" onclick="saveBranch()">💾 حفظ</button></div>
+</div></div></div>
+
+<div class="mover" id="modalAddBlacklist"><div class="modal"><div class="mh"><div class="mht">⛔ حظر — <span id="blModalBranch"></span></div><button class="mc" onclick="closeModal('modalAddBlacklist')">✕</button></div><div class="mb">
+  <div class="fg" style="margin-bottom:12px"><label>رقم الهوية <span class="req">*</span></label><input type="text" id="blIdNo"></div>
+  <div class="fg" style="margin-bottom:12px"><label>الاسم <span class="req">*</span></label><input type="text" id="blName"></div>
+  <div class="fg" style="margin-bottom:12px"><label>الجنسية</label><select id="blNat"></select></div>
+  <div class="fg" style="margin-bottom:16px"><label>السبب <span class="req">*</span></label><textarea rows="3" id="blReason"></textarea></div>
+  <div class="bgrp"><button class="btn bg2" onclick="closeModal('modalAddBlacklist')">إلغاء</button><button class="btn bred" onclick="saveBlacklist()">⛔ إضافة</button></div>
+</div></div></div>
+
+<div class="mover" id="xdlg" style="display:none"></div>
+<div class="toast" id="toast"></div>
